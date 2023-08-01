@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Boostrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Icons -->
+    <script src="https://kit.fontawesome.com/b91969097e.js" crossorigin="anonymous"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Philosopher:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Local style -->
+    <link rel="stylesheet" href="css/scroll.css">
+    <link rel="stylesheet" href="css/chat.css">
+    <title>Chat</title>
+</head>
+
+<body class="container-fluid">
+    <div class="row">
+        <!-- Informacion usuario logueado -->
+        <div class="col-sm-3 vh-100 p-3 nav-content">
+            <div class="d-flex flex-column justify-content-between nav-items">
+                <div style="height: 85%;">
+                    <div class="guia-content mb-4">
+                        <h1 class="font-title mb-0">Mensajes</h1>
+                        <p class="text-grey">Chats recientes</p>
+                        <input type="text" class="form-input" id="buscar-contactos" placeholder="Buscar contacto...">
+                    </div>
+
+                    <div class="lista-contactos" id="lista_contactos">
+
+                    </div>
+                </div>
+
+                <div class="">
+                    <hr class="separador mt-3 mb-3">
+                    <div class="d-flex align-items-center align-items-center justify-content-between">
+                        <img src="" alt="" width="40" id="imagen_login" referrerpolicy="no-referrer">
+                        <h5 class="m-0 font-title" id="nombre_login"></h5>
+                        <i class="fa-solid fa-right-from-bracket fondo-icono" id="btnSalir"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat activo -->
+        <div class="col-sm-9 vh-100 chat-content">
+            <div class="vh-100 chat-content" id="chat-home">
+                <div class="row">
+                    <div class="col-sm-4 mb-3">
+                        <h1 class="text-white">Chat - Online</h1>
+                        <p class="text-grey">Página web creada con fines educativos poniendo en práctica los lenguajes
+                            aprendidos en
+                            plataformas de educación profesional en línea varias de estas son: Udemy, Platzi.
+                            En esta ocasión utilizando el Framework NodeJS con Express y Sockets en el Back-end y en el
+                            Front-end utilizando HTML, CSS y JavaScript.
+                        </p>
+                        <p class="text-white">Dev. Cristian Fernando Grisales Venitez</p>
+                        <div class="content-encuentrame">
+                            <h5 class="title pt-2 text-white">Encuentrame aquí</h5>
+                            <a target="_blank"
+                                href="https://api.whatsapp.com/send/?phone=3204911555&text=%C2%A1Hola!%20Cristian%20%C2%BFTe%20gustar%C3%ADa%20hacer%20parte%20de%20mi%20equipo%20de%20desarrollo?">
+                                <img src="img/whatsapp.svg">
+                            </a>
+                            <a target="_blank" href="https://www.instagram.com/cristian_grisales13/">
+                                <img src="img/instagram.svg">
+                            </a>
+                            <a target="_blank" href="https://www.facebook.com/CristianGrisalesFrisvy">
+                                <img src="img/facebook.svg">
+                            </a>
+
+                            <a target="_blank" href="https://github.com/cgrisales04">
+                                <img src="img/github.svg">
+                            </a>
+                            <a target="_blank"
+                                href="https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=cristiangrisales04@gmail.com">
+                                <img src="img/gmail.svg">
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-8 d-flex flex-column align-items-center" id="content-chat-home">
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-content vh-100" id="chat-privado" style="display: none;">
+                <div class="info-persona-privada">
+                    <div class="d-flex justify-content-between align-items-center p-3">
+                        <div class="d-flex">
+                            <img src="" id="img-msg-privado" alt="" width="50" class="me-3">
+                            <div class="d-flex flex-column">
+                                <h5 id="nombre-msg-privado" class="mb-0 text-white font-title"></h5>
+                                <p id="estado-persona-privada" class="text-grey m-0">En linea</p>
+                            </div>
+                        </div>
+                        <div class="">
+                            <i class="fa-sharp fa-solid fa-phone text-white me-2 fondo-icono"></i>
+                            <i class="fa-solid fa-video text-white me-2 fondo-icono"></i>
+                            <i class="fa-solid fa-magnifying-glass text-white me-3 fondo-icono"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="conversacion-content">
+                    <div class="conversacion-seleccionada pt-2" id="conversacion-privada">
+                        <!-- <p class="text-center dia-mensaje mb-3">Hoy</p> -->
+
+                    </div>
+                </div>
+                <div class="formulario-mensaje d-flex align-items-center mb-2">
+                    <div class="d-flex">
+                        <i class="fa-regular fa-face-smile text-white me-2 fondo-icono"></i>
+                        <label for="adjuntar-archivos"
+                            class="fa-solid fa-paperclip text-white me-2 adjuntar-archivos fondo-icono"></label>
+                        <input type="file" id="adjuntar-archivos">
+                    </div>
+                    <input type="text" placeholder="Escribe un mensaje para ..." class="form-input" id="txtMensaje">
+                    <i class="fas fa-paper-plane text-white ms-3 me-3 fondo-icono"></i>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script src="./socket.io/socket.io.js"></script>
+    <script src="js/chat.js"></script>
+</body>
+
+</html>

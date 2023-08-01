@@ -1,0 +1,170 @@
+/* Genrales */
+body {
+    font-family: sans-serif;
+}
+
+.font-title {
+    font-family: 'Philosopher';
+    font-weight: 700;
+}
+
+.separador {
+    width: 90%;
+    text-align: center;
+    margin: auto;
+}
+
+.text-grey {
+    color: #9a9a9a;
+}
+
+/* Home Page */
+.content-encuentrame a img {
+    width: 35px;
+    box-shadow: rgb(0 0 0 / 15%) 0px 7.95px 5.6px;
+    margin-left: 10px;
+    transition: ease all 0.3s;
+}
+
+.content-encuentrame a {
+    text-decoration: none;
+}
+
+.content-encuentrame a img:hover {
+    width: 40px;
+}
+
+.instrucciones {
+    max-width: 70%;
+    text-align: justify;
+}
+
+/* Conversacion */
+.chat-content {
+    background: #17181f;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.info-persona-privada {
+    background: #1f2029;
+    border-radius: 0px 0px 10px 10px;
+    box-shadow: 0px 0px 5px 0px #1f2029;
+}
+
+
+.conversacion-seleccionada {
+    backdrop-filter: blur(5px);
+    height: 100%;
+    overflow-y: scroll;
+}
+
+.conversacion-content {
+    height: 75%;
+    background-image: url('../img/chatFondo.jpg');
+}
+
+.dia-mensaje {
+    background: #e0f1eb99;
+    max-width: 10%;
+    margin: auto;
+    border-radius: 7px;
+    padding: 4px;
+    font-size: 10px;
+}
+
+.mensaje {
+    padding: 15px;
+    max-width: 60%;
+    text-align: inherit;
+    word-wrap: break-word;
+}
+
+.hora-envio {
+    font-size: 11px;
+    padding-top: 5px;
+}
+
+.mensaje-derecha {
+    background: #45b64c;
+    border-radius: 25px 25px 0px 25px;
+}
+
+.mensaje-izquierdo {
+    background: #e0f1eb;
+    border-radius: 25px 25px 25px 0px;
+}
+
+.form-input {
+    border-bottom: 1px solid #17181f;
+    background: #1f20294f;
+    border-radius: 10px;
+    padding: 10px;
+    color: white;
+    border: none;
+    outline: none;
+    width: 100%;
+}
+
+.form-input:hover {
+    background: #1f2029;
+}
+
+.form-input:focus {
+    background: #1f2029;
+}
+
+#adjuntar-archivos {
+    display: none;
+}
+
+.adjuntar-archivos {
+    cursor: pointer;
+}
+
+.fondo-icono {
+    font-size: 20px;
+    background: #1f2029;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.icon-welcome {
+    font-size: 120px;
+}
+
+
+/* Infor del usuario logueada */
+.lista-contactos {
+    height: 85%;
+    overflow-y: scroll;
+}
+
+#buscar-contactos {
+    background: #17181f;
+}
+
+.contacto {
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.contacto:hover {
+    background: #ffffff1a;
+}
+
+.nav-content {
+    background: #17181f;
+    color: white;
+    box-shadow: 3px 0px 5px 0px #222;
+}
+
+.nav-items {
+    background: #1f2029;
+    height: 100%;
+    padding: 15px;
+    border-radius: 0px 0px 10px 10px;
+    box-shadow: 0px 0px 5px 0px #1f2029;
+}
