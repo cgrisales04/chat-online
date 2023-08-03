@@ -12,6 +12,13 @@ let usuario_privado = {
   uid: "",
 };
 
+let conversacion_activa = {
+  _id: "",
+  de: "",
+  para: "",
+  mensajes: [],
+};
+
 //Referencias HTML
 const txtMensaje = document.getElementById("txtMensaje");
 const lista_contactos = document.getElementById("lista_contactos");
@@ -68,29 +75,46 @@ const conectarSocket = async () => {
 
   socket.on("usuarios-activos", async (payload) => {
     await renderUsuarios(payload);
+
     Array.from(document.getElementsByClassName("contacto")).forEach((el) => {
-      el.addEventListener("click", () => {
-        console.log(el.dataset.id);
-        socket.emit("buscar-usuario", { id: el.dataset.id }, (usuario) => {
-          console.log(usuario);
-          renderChatPrivado(usuario);
-        });
+      el.addEventListener("click", async () => {
+        try {
+          await new Promise((resolve) => {
+            socket.emit("buscar-usuario", { id: el.dataset.id }, (usuario) => {
+              renderChatPrivado(usuario);
+              resolve();
+            });
+          });
+          socket.emit(
+            "crear-chat",
+            { de: usuario.uid, para: el.dataset.id },
+            (nuevo_chat) => {
+
+              conversacion_activa = nuevo_chat;
+              conversacion_privada.dataset.id = conversacion_activa._id;
+              renderizarConversacionAntigua();
+            }
+          );
+        } catch (error) {
+          console.error("Hubo un error en la secuencia de eventos:", error);
+        }
       });
     });
   });
 
-  socket.on("mensaje-privado", ({de, mensaje, hora_envio}) => {
-    conversacion_privada.innerHTML += `
-    <div class="d-flex mb-3 pe-3 ps-3">
-        <div class="mensaje mensaje-izquierdo d-flex flex-column m-0">
-            <span class="text-black">${mensaje}</span>
-            <span class="text-end hora-envio text-black">${hora_envio}</span>
-        </div>
-    </div>
-    `;
+  socket.on("mensaje-privado", ({ de, mensaje, hora_envio }) => {
+    Toast.fire({
+      icon: "success",
+      title: `${de} Te ha enviado un mensaje...`,
+    });
+    renderMensajeRecibido(mensaje, hora_envio);
+
     conversacion_privada.scrollTop = conversacion_privada.scrollHeight;
   });
 
+  /**
+   * Cada que se presione ENTER se envia el mensaje
+   */
   txtMensaje.addEventListener("keyup", ({ keyCode }) => {
     if (keyCode !== 13) return;
     const mensaje = txtMensaje.value;
@@ -101,11 +125,38 @@ const conectarSocket = async () => {
     renderMensajeEnviado(mensaje, hora_envio);
     conversacion_privada.scrollTop = conversacion_privada.scrollHeight;
 
-    socket.emit("enviar-mensaje", { mensaje, hora_envio, uid });
+    socket.emit("enviar-mensaje", {
+      de: usuario.uid,
+      mensaje,
+      hora_envio,
+      uid,
+      uid_conversacion: conversacion_activa._id,
+    });
     txtMensaje.value = "";
   });
 };
 
+/**
+ * Funcion que renderiza concatenando el mensaje recibido
+ * @param {String} mensaje Mensaje enviado
+ * @param {String} hora_envio Hora con formato AM/PM
+ */
+const renderMensajeRecibido = (mensaje = "", hora_envio) => {
+  conversacion_privada.innerHTML += `
+    <div class="d-flex mb-3 pe-3 ps-3">
+        <div class="mensaje mensaje-izquierdo d-flex flex-column m-0">
+            <span class="text-black">${mensaje}</span>
+            <span class="text-end hora-envio text-black">${hora_envio}</span>
+        </div>
+    </div>
+    `;
+};
+
+/**
+ * Funcion que renderiza concatenando el mensaje enviado
+ * @param {String} mensaje Mensaje enviado
+ * @param {String} hora_envio Hora con formato AM/PM
+ */
 const renderMensajeEnviado = (mensaje = "", hora_envio) => {
   conversacion_privada.innerHTML += `
   <div class="d-flex justify-content-end mb-3 pe-3 ps-3">
@@ -118,6 +169,20 @@ const renderMensajeEnviado = (mensaje = "", hora_envio) => {
 };
 
 /**
+ * Se renderiza la conversacion antigua
+ * @param {Array} conversacion Conversacion antigua de 10 mensajes
+ */
+const renderizarConversacionAntigua = () => {
+  conversacion_activa.mensajes.reverse().forEach(({ mensaje, hora_envio, de }) => {
+    if (de == usuario.uid) {
+      renderMensajeEnviado(mensaje, hora_envio);
+    } else {
+      renderMensajeRecibido(mensaje, hora_envio);
+    }
+  });
+};
+
+/**
  * ESC - Para cerrar el chat
  */
 document.addEventListener("keyup", ({ keyCode }) => {
@@ -125,8 +190,14 @@ document.addEventListener("keyup", ({ keyCode }) => {
   chat_privado.style.display = "none";
   chat_home.style.display = "";
   conversacion_privada.innerHTML = "";
+  conversacion_privada.setAttribute("data-id", "");
+  conversacion_activa = {};
 });
 
+/**
+ * Funcion que maqueta la bienvenida al usuario logueado
+ * @returns Estructura de bienvenida al usuario
+ */
 const renderInicioChat = () => {
   const { img, nombre } = usuario;
   return `
@@ -140,6 +211,10 @@ const renderInicioChat = () => {
     </p>`;
 };
 
+/**
+ * Funcion renderisa todo el chat privado
+ * @param {usuario_privado} usuario Usuario seleccionado de la lista
+ */
 const renderChatPrivado = (usuario = usuario_privado) => {
   usuario_privado = usuario;
 
@@ -147,10 +222,16 @@ const renderChatPrivado = (usuario = usuario_privado) => {
   chat_home.style.display = "none";
   conversacion_privada.innerHTML = "";
 
+  txtMensaje.placeholder = `Escribe un mensaje para ${usuario_privado.nombre}...`;
+
   nombre_msg_privado.innerText = usuario_privado.nombre;
   img_msg_privado.src = validarImagen(usuario_privado.img);
 };
 
+/**
+ * Renderisa los usuarios en la lista de contactos
+ * @param {Array} usuarios Lista de usuarios
+ */
 const renderUsuarios = async (usuarios = []) => {
   let usersHtml = "";
   usuarios.forEach(({ nombre, uid, img }) => {
@@ -174,20 +255,34 @@ const renderUsuarios = async (usuarios = []) => {
   lista_contactos.innerHTML = usersHtml;
 };
 
+/**
+ * Valida que si haya una imagen  y asigna una por defecto en caso de que
+ * sea vacio
+ * @param {String} img Ruta de imagen
+ * @returns Si la imagen existe retorna la imagen sino retorna una imagen general
+ */
 const validarImagen = (img = "img/user_icon-icons.com_66546.svg") => img;
 
-const calcularHoraToAmPm = (date = new Date) => {
+/**
+ *
+ * @param {Date} date Fecha
+ * @returns La hora con el formato AM/PM
+ */
+const calcularHoraToAmPm = (date = new Date()) => {
   let hours = date.getHours();
   let minutes = date.getMinutes();
-  const ampm = hours >= 12 ? 'PM' : 'AM';
+  const ampm = hours >= 12 ? "PM" : "AM";
 
   hours = hours % 12;
   hours = hours ? hours : 12;
   minutes = minutes < 10 ? "0" + minutes : minutes;
-  
+
   return hours + ":" + minutes + " " + ampm;
 };
 
+/**
+ * Si se presiona el boton de salir, borra el token y recarga la pagina
+ */
 btnSalir.onclick = async () => {
   console.log("consent revoked");
   localStorage.clear();

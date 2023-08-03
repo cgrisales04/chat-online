@@ -16,6 +16,7 @@ class Server {
     this.paths = {
       auth: "/api/auth",
       usuarios: "/api/usuarios",
+      chat: "/api/chat"
     };
 
     // Conectar a base de datos
@@ -58,6 +59,7 @@ class Server {
   routes() {
     this.app.use(this.paths.auth, require("../routes/auth"));
     this.app.use(this.paths.usuarios, require("../routes/usuarios"));
+    this.app.use(this.paths.chat, require("../routes/chat.route"));
   }
   sockets() {
     this.io.on("connection", (socket) => socketController(socket, this.io));
