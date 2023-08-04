@@ -1,4 +1,6 @@
-const url = "http://localhost:8080/api/auth";
+const url = window.location.hostname.includes("localhost")
+  ? "http://localhost:8080/api/auth"
+  : "https://chat-online-zpyb-dev.fl0.io/api/auth";
 
 let usuario = null;
 let socket = null;
@@ -89,7 +91,6 @@ const conectarSocket = async () => {
             "crear-chat",
             { de: usuario.uid, para: el.dataset.id },
             (nuevo_chat) => {
-
               conversacion_activa = nuevo_chat;
               conversacion_privada.dataset.id = conversacion_activa._id;
               renderizarConversacionAntigua();
@@ -173,13 +174,15 @@ const renderMensajeEnviado = (mensaje = "", hora_envio) => {
  * @param {Array} conversacion Conversacion antigua de 10 mensajes
  */
 const renderizarConversacionAntigua = () => {
-  conversacion_activa.mensajes.reverse().forEach(({ mensaje, hora_envio, de }) => {
-    if (de == usuario.uid) {
-      renderMensajeEnviado(mensaje, hora_envio);
-    } else {
-      renderMensajeRecibido(mensaje, hora_envio);
-    }
-  });
+  conversacion_activa.mensajes
+    .reverse()
+    .forEach(({ mensaje, hora_envio, de }) => {
+      if (de == usuario.uid) {
+        renderMensajeEnviado(mensaje, hora_envio);
+      } else {
+        renderMensajeRecibido(mensaje, hora_envio);
+      }
+    });
 };
 
 /**

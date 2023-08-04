@@ -1,4 +1,7 @@
-const url = "http://localhost:8080/api/auth";
+const url = window.location.hostname.includes("localhost")
+  ? "http://localhost:8080/api/auth"
+  : "https://chat-online-zpyb-dev.fl0.io/api/auth";
+
 const miFormulario = document.querySelector("form");
 
 miFormulario.addEventListener("submit", (ev) => {
@@ -7,7 +10,7 @@ miFormulario.addEventListener("submit", (ev) => {
   for (let el of miFormulario.elements) {
     if (el.name.length > 0) formData[el.name] = el.value;
   }
-  
+
   fetch(url + "/login", {
     method: "POST",
     body: JSON.stringify(formData),
@@ -39,7 +42,6 @@ function handleCredentialResponse(response) {
     .then(({ token }) => {
       localStorage.setItem("token", token);
       window.location = "chat.html";
-
     })
     .catch(console.warn);
 }
