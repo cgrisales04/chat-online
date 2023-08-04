@@ -138,14 +138,15 @@ const conectarSocket = async () => {
     });
   });
 
-  socket.on("mensaje-privado", ({ de, mensaje, hora_envio }) => {
+  socket.on("mensaje-privado", ({uid_conversacion, de, mensaje, hora_envio }) => {
     Toast.fire({
       icon: "success",
       title: `${de} Te ha enviado un mensaje...`,
     });
-    renderMensajeRecibido(mensaje, hora_envio);
-
-    conversacion_privada.scrollTop = conversacion_privada.scrollHeight;
+    if (uid_conversacion == conversacion_activa._id) {
+      renderMensajeRecibido(mensaje, hora_envio);
+      conversacion_privada.scrollTop = conversacion_privada.scrollHeight;
+    }
   });
 
   const enviar_mensaje = (mensaje = "") => {
@@ -231,6 +232,7 @@ const renderizarConversacionAntigua = () => {
       } else {
         renderMensajeRecibido(mensaje, hora_envio);
       }
+      conversacion_privada.scrollTop = conversacion_privada.scrollHeight;
     });
 };
 

@@ -60,7 +60,7 @@ const socketController = async (socket = new Socket(), io) => {
         //Mensaje privado
         socket
           .to(uid)
-          .emit("mensaje-privado", { de: usuario.nombre, mensaje, hora_envio });
+          .emit("mensaje-privado", { uid_conversacion, de: usuario.nombre, mensaje, hora_envio });
       } else {
         chatMensajes.enviarMensaje(usuario.id, usuario.nombre, mensaje);
         io.emit("recibir-mensajes", chatMensajes.ultimos10);
