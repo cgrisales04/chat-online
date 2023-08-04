@@ -23,6 +23,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.min.js"></script>
 
+    <!-- Emojis import -->
+    <script src="https://cdn.jsdelivr.net/npm/emoji-mart@latest/dist/browser.js"></script>
+
     <title>Chat</title>
 </head>
 
@@ -66,7 +69,7 @@
                             En esta ocasión utilizando el Framework NodeJS con Express y Sockets en el Back-end y en el
                             Front-end utilizando HTML, CSS y JavaScript.
                         </p>
-                        <p class="text-white">Dev. Cristian Fernando Grisales Venitez</p>
+                        <p class="text-white">Dev. Cristian Grisales</p>
                         <div class="content-encuentrame">
                             <h5 class="title pt-2 text-white">Encuentrame aquí</h5>
                             <a target="_blank"
@@ -107,9 +110,10 @@
                             </div>
                         </div>
                         <div class="">
-                            <i class="fa-sharp fa-solid fa-phone text-white me-2 fondo-icono"></i>
-                            <i class="fa-solid fa-video text-white me-2 fondo-icono"></i>
-                            <i class="fa-solid fa-magnifying-glass text-white me-3 fondo-icono"></i>
+                            <i class="fa-sharp fa-solid fa-phone icon-disabled me-1 fondo-icono"></i>
+                            <i class="fa-solid fa-video icon-disabled me-1 fondo-icono"></i>
+                            <i class="fa-solid fa-magnifying-glass icon-disabled me-1 fondo-icono"></i>
+                            <i class="fa-solid fa-x text-white fondo-icono" id="btn_cerrar_chat"></i>
                         </div>
                     </div>
                 </div>
@@ -119,14 +123,15 @@
                     </div>
                 </div>
                 <div class="formulario-mensaje d-flex align-items-center mb-2">
+                    <div id="emojis_content" class="emojis_content"></div>
                     <div class="d-flex">
-                        <i class="fa-regular fa-face-smile text-white me-2 fondo-icono"></i>
+                        <i class="fa-regular fa-face-smile text-white me-2 fondo-icono" id="emojis"></i>
                         <label for="adjuntar-archivos"
-                            class="fa-solid fa-paperclip text-white me-2 adjuntar-archivos fondo-icono"></label>
-                        <input type="file" id="adjuntar-archivos">
+                            class="fa-solid fa-paperclip icon-disabled me-2 adjuntar-archivos fondo-icono"></label>
+                        <!-- <input type="file" id="adjuntar-archivos"> -->
                     </div>
                     <input type="text" placeholder="" class="form-input" id="txtMensaje">
-                    <i class="fas fa-paper-plane text-white ms-3 me-3 fondo-icono"></i>
+                    <i class="fas fa-paper-plane text-white ms-3 me-3 fondo-icono" id="icon-send"></i>
                 </div>
             </div>
 

@@ -32,6 +32,10 @@ const imagen_login = document.getElementById("imagen_login");
 const nombre_login = document.getElementById("nombre_login");
 
 //Elementos del chat privado
+const emojis = document.getElementById("emojis");
+const emojis_content = document.getElementById("emojis_content");
+const icon_send = document.getElementById("icon-send");
+const btn_cerrar_chat = document.getElementById("btn_cerrar_chat");
 const nombre_msg_privado = document.getElementById("nombre-msg-privado");
 const img_msg_privado = document.getElementById("img-msg-privado");
 const chat_privado = document.getElementById("chat-privado");
@@ -39,6 +43,37 @@ const conversacion_privada = document.getElementById("conversacion-privada");
 
 const chat_home = document.getElementById("chat-home");
 const content_chat_home = document.getElementById("content-chat-home");
+
+let emojis_bandera = false;
+
+const pickerOptions = {
+  onEmojiSelect: (emoji) => {
+    txtMensaje.value += emoji.native;
+    txtMensaje.focus();
+  },
+  locale: "es",
+  set: "twitter",
+};
+const emojiPicker = new EmojiMart.Picker(pickerOptions);
+
+emojis.addEventListener("click", () => {
+  emojis_bandera = !emojis_bandera;
+  emojis_bandera
+    ? emojis_content.append(emojiPicker)
+    : (emojis_content.innerHTML = "");
+  txtMensaje.focus();
+});
+
+document.addEventListener("click", (event) => {
+  if (
+    !emojis_content.contains(event.target) &&
+    event.target !== emojis_content &&
+    event.target !== emojis
+  ) {
+    emojis_content.innerHTML = "";
+    emojis_bandera = false;
+  }
+});
 
 //Validar Token LocalStorage
 const validarJWT = async () => {
@@ -113,14 +148,14 @@ const conectarSocket = async () => {
     conversacion_privada.scrollTop = conversacion_privada.scrollHeight;
   });
 
-  /**
-   * Cada que se presione ENTER se envia el mensaje
-   */
-  txtMensaje.addEventListener("keyup", ({ keyCode }) => {
-    if (keyCode !== 13) return;
-    const mensaje = txtMensaje.value;
-    if (mensaje.length === 0) return;
-
+  const enviar_mensaje = (mensaje = "") => {
+    if (mensaje.length === 0) {
+      Toast.fire({
+        icon: "warning",
+        title: `El mensaje no puede ir vacío.`,
+      });
+      return;
+    }
     const { uid } = usuario_privado;
     const hora_envio = calcularHoraToAmPm();
     renderMensajeEnviado(mensaje, hora_envio);
@@ -134,6 +169,20 @@ const conectarSocket = async () => {
       uid_conversacion: conversacion_activa._id,
     });
     txtMensaje.value = "";
+  };
+
+  /**
+   * Cada que se presione ENTER se envia el mensaje
+   */
+  txtMensaje.addEventListener("keyup", ({ keyCode }) => {
+    if (keyCode !== 13) return;
+    const mensaje = txtMensaje.value;
+    enviar_mensaje(mensaje);
+  });
+
+  icon_send.addEventListener("click", () => {
+    const mensaje = txtMensaje.value;
+    enviar_mensaje(mensaje);
   });
 };
 
@@ -185,16 +234,23 @@ const renderizarConversacionAntigua = () => {
     });
 };
 
-/**
- * ESC - Para cerrar el chat
- */
-document.addEventListener("keyup", ({ keyCode }) => {
-  if (keyCode !== 27) return;
+const cerrar_chat = () => {
   chat_privado.style.display = "none";
   chat_home.style.display = "";
   conversacion_privada.innerHTML = "";
   conversacion_privada.setAttribute("data-id", "");
   conversacion_activa = {};
+  emojis_content.innerHTML = "";
+};
+
+btn_cerrar_chat.addEventListener("click", cerrar_chat);
+
+/**
+ * ESC - Para cerrar el chat
+ */
+document.addEventListener("keyup", ({ keyCode }) => {
+  if (keyCode !== 27) return;
+  cerrar_chat();
 });
 
 /**
@@ -210,7 +266,7 @@ const renderInicioChat = () => {
     )}" referrerpolicy="no-referrer" alt="" class="m-0 mb-3 mt-3" width="120">
     <p class="text-grey instrucciones">
       Encantado de tenerte por aquí ${nombre}, si deseas
-      interactuar con alguien en linea selecciona un chat para iniciar una nueva convesación...
+      interactuar con alguien en linea selecciona un chat para iniciar una nueva conversación...
     </p>`;
 };
 

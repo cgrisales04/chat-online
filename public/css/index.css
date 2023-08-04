@@ -1,0 +1,36 @@
+body {
+    background: #17181f;
+    font-family: sans-serif;
+
+}
+
+.text-grey {
+    color: #9a9a9a;
+}
+
+.content-info {
+    height: 90vh;
+}
+
+.title {
+    font-size: 70px;
+}
+
+.parrafos {
+    word-wrap: break-word;
+    text-align: inherit;
+}
+
+
+.icon-text::before,
+.title::before {
+    color: #21acde;
+    content: " | ";
+    display: inline-block;
+    font-weight: bold;
+    width: 10px;
+}
+
+.title::before {
+    margin-right: 10px;
+}

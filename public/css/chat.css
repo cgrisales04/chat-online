@@ -65,6 +65,15 @@ body {
     background-image: url('../img/chatFondo.jpg');
 }
 
+.emojis_content {
+    position: absolute;
+    transform: translate(0%, -56%) !important;
+}
+
+.icon-disabled {
+    color: #ffffff66;
+}
+
 .dia-mensaje {
     background: #e0f1eb99;
     max-width: 10%;
