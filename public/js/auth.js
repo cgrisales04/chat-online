@@ -1,6 +1,6 @@
 const url = window.location.hostname.includes("localhost")
   ? "http://localhost:8080/api/auth"
-  : "https://chat-online-68pm.onrender.com";
+  : "https://chat-online-68pm.onrender.com/api/auth";
 
 const miFormulario = document.querySelector("form");
 
